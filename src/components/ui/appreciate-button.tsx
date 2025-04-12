@@ -19,7 +19,7 @@ interface AppreciateButtonProps {
   postId: string;
 }
 
-const AppreciateButton: FC<AppreciateButtonProps> = ({ author, postId }) => {
+const AppreciateButton: FC<AppreciateButtonProps> = ({ author }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [customAmount, setCustomAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
