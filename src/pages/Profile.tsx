@@ -74,7 +74,8 @@ export default function Profile() {
         <div className="flex flex-col p-4 lg:px-24 gap-8 max-w-4xl mx-auto w-full py-8 min-h-[70vh] justify-center items-center">
           <div className="text-center">
             <p className="text-muted-foreground">
-              Please create a profile to view this page.
+              Please create a profile to view this page. If you just created
+              your profile, please wait a few minutes and refresh the page.
             </p>
             <button
               onClick={() => navigate("/")}
