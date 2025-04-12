@@ -55,7 +55,7 @@ export default function ProfileDialog({
           <DialogTitle>Create Your Profile</DialogTitle>
           <DialogDescription>
             Create a profile to start using AR-blog. This information will be
-            stored on Arweave.
+            stored on Arweave. Ignore if already created.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">
