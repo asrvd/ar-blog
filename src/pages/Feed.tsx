@@ -9,6 +9,8 @@ import {
 import { formatDistance } from "date-fns";
 import { useFeedPosts } from "../hooks/useArweaveQueries";
 import { Link } from "react-router";
+import { AppreciateButton } from "../components/ui/appreciate-button";
+import { useActiveAddress } from "arweave-wallet-kit";
 
 export default function Feed() {
   const {
@@ -16,6 +18,8 @@ export default function Feed() {
     isLoading: postsLoading,
     isError,
   } = useFeedPosts(20);
+
+  const address = useActiveAddress();
 
   console.log(posts);
 
@@ -64,12 +68,24 @@ export default function Feed() {
                 <CardContent>
                   <p className="line-clamp-3 text-sm">{post.content}</p>
                   <div className="mt-4 flex justify-between items-center">
-                    <Link
-                      to={`/profile/${post.author}`}
-                      className="text-xs font-medium hover:underline truncate max-w-[100px]"
-                    >
-                      @{post.author}
-                    </Link>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm">
+                        by{" "}
+                        <Link
+                          to={`/profile/${post.author}`}
+                          className="text-sm font-medium hover:underline truncate max-w-[100px]"
+                        >
+                          {post.authorName || post.author.substring(0, 8)}
+                        </Link>
+                      </p>
+                      {/* Only show appreciate button if the user is not the author */}
+                      {address && address !== post.author && (
+                        <AppreciateButton
+                          author={post.author}
+                          postId={post.id}
+                        />
+                      )}
+                    </div>
                     <Link
                       to={`/post/${post.id}`}
                       className="text-xs underline hover:text-primary"

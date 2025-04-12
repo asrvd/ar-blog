@@ -5,6 +5,7 @@ import path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/", // Base URL for the app (change if deployed to a subdirectory)
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

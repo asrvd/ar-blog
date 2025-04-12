@@ -15,10 +15,13 @@ import { ArrowLeft } from "lucide-react";
 import { formatDistance } from "date-fns";
 import { Link } from "react-router";
 import type { BlogPost } from "../lib/arweave";
+import { AppreciateButton } from "../components/ui/appreciate-button";
+import { useActiveAddress } from "arweave-wallet-kit";
 
 export default function PublicProfile() {
   const { address } = useParams<{ address: string }>();
   const navigate = useNavigate();
+  const currentUserAddress = useActiveAddress();
 
   const {
     data: profile,
@@ -118,6 +121,13 @@ export default function PublicProfile() {
               </p>
             </div>
             <p className="text-sm max-w-md">{profile.bio}</p>
+
+            {/* Show appreciate button if viewing someone else's profile */}
+            {currentUserAddress && currentUserAddress !== address && (
+              <div className="mt-2">
+                <AppreciateButton author={address || ""} postId="profile" />
+              </div>
+            )}
           </div>
         </div>
 

@@ -9,11 +9,14 @@ import { Button } from "../components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
 import type { BlogPost } from "../lib/arweave";
+import { AppreciateButton } from "../components/ui/appreciate-button";
+import { useActiveAddress } from "arweave-wallet-kit";
 
 export default function Post() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data, isLoading, isError } = usePost(id || null);
+  const address = useActiveAddress();
 
   // Properly type the post data
   const post = data as unknown as BlogPost | null;
@@ -84,7 +87,10 @@ export default function Post() {
 
           {/* Author info and metadata */}
           <div className="flex items-center justify-between pt-2 border-t border-zinc-200">
-            <Link to={`/profile/${post.author}`} className="hover:opacity-80 group">
+            <Link
+              to={`/profile/${post.author}`}
+              className="hover:opacity-80 group"
+            >
               <div className="flex items-center gap-2">
                 <Avatar className="w-8 h-8">
                   <AvatarImage
@@ -95,14 +101,20 @@ export default function Post() {
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col group leading-tight">
-                  <span className="text-sm group-hover:underline">{post.authorName}</span>
+                  <span className="text-sm group-hover:underline">
+                    {post.authorName}
+                  </span>
                   <span className="text-xs text-muted-foreground">
                     {formatTime(post.timestamp)}
                   </span>
                 </div>
               </div>
             </Link>
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
+              {/* Only show appreciate button if the user is not the author */}
+              {address && address !== post.author && (
+                <AppreciateButton author={post.author} postId={post.id} />
+              )}
               {post.tags.map((tag: string, index: number) => (
                 <Badge key={index} variant="outline">
                   {tag}

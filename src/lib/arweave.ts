@@ -326,3 +326,54 @@ export const useUserProfile = () => {
 
   return { profile, loading };
 };
+
+// Send appreciation to a post author
+export const sendAppreciation = async (
+  targetAddress: string,
+  amount: string,
+  fromAddress: string
+): Promise<string | null> => {
+  try {
+    if (!fromAddress) {
+      throw new Error("No wallet connected");
+    }
+
+    if (!targetAddress) {
+      throw new Error("No target address specified");
+    }
+
+    // Convert AR to Winston (smallest unit)
+    const winstonAmount = arweave.ar.arToWinston(amount);
+
+    // Create a transaction to transfer AR
+    const tx = await arweave.createTransaction({
+      target: targetAddress,
+      quantity: winstonAmount,
+    });
+
+    // Add tags for tracking appreciations in our app
+    tx.addTag("App-Name", APP_NAME);
+    tx.addTag("Type", "Appreciation");
+    tx.addTag("From", fromAddress);
+    tx.addTag("To", targetAddress);
+    tx.addTag("Amount", amount);
+
+    // Sign transaction with wallet
+    await arweave.transactions.sign(tx);
+
+    // Post the transaction to the network
+    const response = await arweave.transactions.post(tx);
+
+    if (response.status === 200 || response.status === 202) {
+      return tx.id;
+    } else {
+      throw new Error(`Transaction failed with status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Error sending appreciation:", error);
+    throw error;
+  }
+};
+
+// Alias for backward compatibility
+export const sendReward = sendAppreciation;
